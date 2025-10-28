@@ -1,6 +1,6 @@
 ## `NumericComponent` implementation example
 
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/6314630c-00ff-4cf3-a7a8-b1fe22127f89" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/cca1271c-1a90-40a1-827a-9e2753fd9faa" />
 
 <hr>
 
