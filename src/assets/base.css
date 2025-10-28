@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+/* Custom theme colors for Tailwind CSS v4 */
+/* stylelint-disable-next-line at-rule-no-unknown */
+@theme {
+    --color-light-grey: #CFCADF;
+    --color-primary: #3D06D7;
+    --color-primary-light: #906FEE;
+    --color-dark: #1E0E4C;
+
+    --font-inter: 'Inter', sans-serif;
+    --font-koulen: 'Koulen', sans-serif;
+}
