@@ -2,7 +2,7 @@
   <div class="flex">
     <div 
         class="rounded-full w-[88px] h-[88px] mr-[16px] bg-gray-200 bg-cover bg-center transition-all"
-        :class="isFocused ? 'avatar-focused' : ''"
+        :class="isFocused ? 'shadow-[0_0_0_3px_white,0_0_0_4px_var(--color-primary)]' : ''"
         :style="{ backgroundImage: thumb ? `url(${thumb})` : 'none' }"
       >
     </div>
@@ -28,7 +28,7 @@
             @blur="handleBlur"
             type="text"
             inputmode="numeric"
-            class="numeric-input border-1 rounded-lg px-3 py-2 font-medium focus:outline-none transition-colors h-[44px] text-light-grey mr-[12px] caret-primary-light"
+            class="transition-[width,color,background-color,border-color] duration-200 ease-in-out border-1 rounded-lg px-3 py-2 font-medium focus:outline-none h-[44px] text-light-grey mr-[12px] caret-primary-light"
             :class="isFocused ? 'border-2 border-primary text-black!' : 'border-light-grey'"
             :style="{ width: inputWidth }"
           />
@@ -46,6 +46,7 @@
 import { ref, computed, watch, nextTick } from 'vue'
 
 const MAX_VALUE = Number.MAX_SAFE_INTEGER
+const DEFAULT_INPUT_WIDTH = 72
 
 const props = defineProps<{
   label: string
@@ -88,15 +89,22 @@ const formattedValue = computed(() => {
 const updateInputWidth = async () => {
   await nextTick()
   
-  if (!formattedValue.value || !measureRef.value) {
-    inputWidth.value = '72px'
+  if (!formattedValue.value || !measureRef.value || !inputRef.value) {
+    inputWidth.value = `${DEFAULT_INPUT_WIDTH}px`
     return
   }
   
   const textWidth = measureRef.value.offsetWidth
-  const padding = 24 // px-3 = 12px * 2
-  const border = isFocused.value ? 4 : 2 // border-2 or border-1
-  const width = Math.max(72, textWidth + padding + border)
+  
+  const computedStyle = getComputedStyle(inputRef.value)
+  const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0
+  const paddingRight = parseFloat(computedStyle.paddingRight) || 0
+  const borderLeft = parseFloat(computedStyle.borderLeftWidth) || 0
+  const borderRight = parseFloat(computedStyle.borderRightWidth) || 0
+  
+  const padding = paddingLeft + paddingRight
+  const border = borderLeft + borderRight
+  const width = Math.max(DEFAULT_INPUT_WIDTH, textWidth + padding + border)
   
   inputWidth.value = `${width}px`
 }
@@ -139,21 +147,4 @@ const handleInput = (event: Event) => {
 </script>
 
 <style scoped>
-.numeric-input {
-  transition: width 0.2s ease;
-}
-
-.avatar-focused {
-  box-shadow: 0 0 0 3px white, 0 0 0 4px var(--color-primary);
-}
-
-.numeric-input::-webkit-outer-spin-button,
-.numeric-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.numeric-input[type=number] {
-  -moz-appearance: textfield;
-}
 </style>
