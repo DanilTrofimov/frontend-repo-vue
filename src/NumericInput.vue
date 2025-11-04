@@ -64,7 +64,6 @@ const inputRef = ref<HTMLInputElement | null>(null)
 const measureRef = ref<HTMLSpanElement | null>(null)
 const internalValue = ref<number | null>(props.modelValue ?? null)
 const isFocused = ref(false)
-const inputWidth = ref('72px')
 
 const handleFocus = () => {
   isFocused.value = true
@@ -86,12 +85,9 @@ const formattedValue = computed(() => {
   return str.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
 })
 
-const updateInputWidth = async () => {
-  await nextTick()
-  
+const inputWidth = computed(() => {
   if (!formattedValue.value || !measureRef.value || !inputRef.value) {
-    inputWidth.value = `${DEFAULT_INPUT_WIDTH}px`
-    return
+    return `${DEFAULT_INPUT_WIDTH}px`
   }
   
   const textWidth = measureRef.value.offsetWidth
@@ -106,10 +102,8 @@ const updateInputWidth = async () => {
   const border = borderLeft + borderRight
   const width = Math.max(DEFAULT_INPUT_WIDTH, textWidth + padding + border)
   
-  inputWidth.value = `${width}px`
-}
-
-watch(formattedValue, updateInputWidth, { immediate: true })
+  return `${width}px`
+})
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement
